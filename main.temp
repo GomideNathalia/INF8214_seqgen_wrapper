@@ -1,0 +1,41 @@
+import time
+
+from RunProg import RunProg
+
+# Programme pour tester la classe RunProg
+def main ():
+
+    print("Inicialisation du test")
+    configFile = "config.txt"
+
+    monRunProg = RunProg(configFile)
+    
+    currentStatus = monRunProg.status()
+    print ("Status: " + str(currentStatus))
+
+    monRunProg.run()
+    
+    currentStatus = monRunProg.status()
+    print ("Status: " + str(currentStatus))
+
+    time.sleep(5)
+    
+    currentStatus = monRunProg.status()
+    print ("Status: " + str(currentStatus))
+         
+    viewResult = monRunProg.view()
+    print ("View: " + str(viewResult))
+
+    for result in viewResult:
+        readResults = monRunProg.read(result)
+        print ("Read " + result + " :\n " + readResults)
+
+    monRunProg.reset()
+
+    currentStatus = monRunProg.status()
+    print ("Status: " + str(currentStatus))
+
+if __name__ == "__main__":
+    main()
+
+

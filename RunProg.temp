@@ -1,0 +1,60 @@
+import subprocess
+import os
+import sys
+from genereCommande import genereCommande
+from genereCommande import extraireParametres
+
+class RunProg:
+    def __init__(self, paramsFile):
+        self.__processus = None
+        self.__paramsFile = paramsFile
+        self.__parametresValides__()
+
+
+    def __parametresValides__(self):
+        if os.path.exists(self.__paramsFile) and any(caractere.isalnum() for caractere in self.__paramsFile):
+            print(extraireParametres(self.__paramsFile))
+        else:
+            print(f"Fichier de configuration: {self.__paramsFile} n'existe pas ou est un format de nom de fichier invalide.")
+            sys.exit(0)
+        return 
+    
+    def run(self):
+        commande = genereCommande(self.__paramsFile)
+
+        log_file = open('seqgen.log', 'w')
+        self.__processus = subprocess.Popen([commande], shell = True, stdout = log_file, stderr = log_file)
+        
+    def status(self):
+        if self.__processus == None:
+            return 0
+        
+        if self.__processus.poll() == None:
+            return 1
+        
+        if self.__processus.poll() == 0:
+            return 2
+        
+        return 3
+
+    def reset (self):
+        self.__processus.kill()
+        self.__processus = None
+
+    def view (self):
+        parametres = extraireParametres(self.__paramsFile)
+
+        listeFichiers = [parametres['outfile'], "seqgen.log"]
+        return listeFichiers
+    
+    def read (self, fichier):
+        fichierExists = os.path.exists(fichier)
+        if fichierExists:
+            openFichier = open (fichier, "r")
+            return openFichier.read()
+        else:
+            return None
+        
+    
+
+        
